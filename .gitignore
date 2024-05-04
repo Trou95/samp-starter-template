@@ -1,0 +1,8 @@
+.idea
+.vscode
+.env
+*.amx
+samp/pawno/*.dll
+samp/pawno/*.ico
+samp/pawno/*.exe
+samp/pawno/*.ini

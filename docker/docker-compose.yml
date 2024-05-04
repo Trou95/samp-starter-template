@@ -1,0 +1,44 @@
+version: '3.8'
+
+networks:
+  mysql_network:
+
+volumes:
+  pma_volume:
+
+services:
+  samp:
+    build: ./samp
+    container_name: samp-container
+    restart: always
+    ports:
+      - "7777:7777/udp"
+    networks:
+      - mysql_network
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.3.0
+    container_name: mysql-container
+    restart: always
+    env_file: .env.development
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql_network
+    volumes:
+      - pma_volume:/var/lib/mysql
+    command:  --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-container
+    restart: always
+    env_file: .env.development
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - mysql_network
